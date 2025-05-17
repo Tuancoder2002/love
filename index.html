@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Ghép 1050 mảnh vì cậu 💘</title>
+  <style>
+    body {
+      text-align: center;
+      background: linear-gradient(135deg, #ffe6e6, #fffafc);
+      font-family: monospace;
+      white-space: pre;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      animation: backgroundGradient 10s ease infinite;
+    }
+
+    @keyframes backgroundGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    canvas {
+      border: 3px solid #ff99aa;
+      margin: 20px auto;
+      max-width: 100%;
+      height: auto;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(255, 153, 170, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    canvas:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(255, 153, 170, 0.4);
+    }
+
+    pre {
+      margin: 20px auto;
+      font-size: 8px; 
+      line-height: 6px; 
+      letter-spacing: 0px; 
+      display: inline-block;
+      text-align: center;
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      color: black;
+      border: 2px solid #ffccd5;
+      transition: all 0.3s ease;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    pre:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      color: #ff6b81;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(255, 107, 129, 0.2);
+      font-size: 24px;
+      animation: titleFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes titleFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    #status {
+      color: #ff6b81;
+      font-size: 18px;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 20px;
+      box-shadow: 0 3px 10px rgba(255, 107, 129, 0.2);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .start-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #ff6b81, #ff4757);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 107, 129, 0.3);
+      transition: all 0.3s ease;
+      margin: 20px 0;
+    }
+
+    .start-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 107, 129, 0.4);
+    }
+
+    .start-button:active {
+      transform: translateY(1px);
+    }
+
+    #canvas {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧩 Từng mảnh đang bay về phía cậu 💘</h1>
+  <button id="startButton" class="start-button">Bắt đầu ghép hình 💝</button>
+  <canvas id="canvas" width="380" height="600"></canvas>
+  <p id="status">Nhấn nút để bắt đầu...</p>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    const startButton = document.getElementById('startButton');
+    const status = document.getElementById('status');
+    
+    let pieces = [];
+    let activePieces = [];
+    let index = 0;
+    let animationDone = false;
+    let scaleX, scaleY;  // Thêm biến toàn cục
+
+    const COLS = 25;
+    const ROWS = 42;
+    const BATCH_SIZE = 5;  // Giảm số lượng mảnh được thêm vào mỗi lần
+    const FRAME_DURATION = 60;  // Tăng thời gian cho mỗi frame
+
+    function easeOutCubic(t) {
+      return 1 - Math.pow(1 - t, 3);
+    }
+
+    function imageToAscii(img, width) {
+      const tempCanvas = document.createElement('canvas');
+      const aspectRatio = img.naturalWidth / img.naturalHeight;
+      const height = Math.floor(width / aspectRatio);
+      tempCanvas.width = width;
+      tempCanvas.height = height;
+      const tempCtx = tempCanvas.getContext('2d');
+      tempCtx.drawImage(img, 0, 0, width, height);
+      const imageData = tempCtx.getImageData(0, 0, width, height).data;
+
+      // Sử dụng một ký tự duy nhất để tạo hình ảnh rõ ràng hơn
+      const asciiChars = "T ";  // Chỉ sử dụng "T" và khoảng trắng
+      const numChars = asciiChars.length;
+      const grayScaleLevels = 256 / numChars;
+      let asciiArt = "";
+      
+      for (let j = 0; j < height; j++) {
+        for (let i = 0; i < width; i++) {
+          const pixelIndex = (j * width + i) * 4;
+          const r = imageData[pixelIndex];
+          const g = imageData[pixelIndex + 1];
+          const b = imageData[pixelIndex + 2];
+          const brightness = Math.floor((0.299 * r + 0.587 * g + 0.114 * b));
+          const charIndex = Math.floor(brightness / grayScaleLevels);
+          asciiArt += asciiChars[charIndex < numChars ? charIndex : numChars - 1];
+        }
+        asciiArt += '\n';
+      }
+      return '<pre>' + asciiArt + '</pre>';
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      activePieces.forEach(p => {
+        p.progress += 0.5 / FRAME_DURATION;  // Giảm tốc độ di chuyển của mỗi mảnh
+        if (p.progress >= 1) {
+          p.progress = 1;
+          p.done = true;
+        }
+
+        const x = p.tx + (p.ex - p.tx) * easeOutCubic(p.progress);
+        const y = p.ty + (p.ey - p.ty) * easeOutCubic(p.progress);
+
+        ctx.drawImage(
+          img,
+          p.sx, p.sy, p.sw, p.sh,
+          x, y, p.sw * scaleX, p.sh * scaleY
+        );
+      });
+
+      if (index < pieces.length) {
+        const batch = pieces.slice(index, index + BATCH_SIZE);
+        activePieces = activePieces.concat(batch);
+        index += BATCH_SIZE;
+      }
+
+      activePieces = activePieces.filter(p => !p.done);
+
+      if (index < pieces.length || activePieces.length > 0) {
+        requestAnimationFrame(animate);
+      } else {
+        if (!animationDone) {
+          canvas.style.display = 'none';
+          const asciiWidth = 150; // Tăng độ rộng để có nhiều chi tiết hơn
+          const asciiArt = imageToAscii(img, asciiWidth);
+          document.body.innerHTML += asciiArt;
+          document.getElementById('status').innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ T nè 💖';
+          animationDone = true;
+        }
+      }
+    }
+
+    // Di chuyển sự kiện click sau khi img.onload
+    img.onload = () => {
+      const pieceWidth = img.naturalWidth / COLS;
+      const pieceHeight = img.naturalHeight / ROWS;
+      scaleX = canvas.width / img.naturalWidth;   // Gán giá trị cho biến toàn cục
+      scaleY = canvas.height / img.naturalHeight;  // Gán giá trị cho biến toàn cục
+
+      // Khởi tạo pieces
+      for (let row = 0; row < ROWS; row++) {
+        for (let col = 0; col < COLS; col++) {
+          const targetX = col * pieceWidth * scaleX;
+          const targetY = row * pieceHeight * scaleY;
+
+          let startX, startY;
+          const side = Math.floor(Math.random() * 4);
+          const margin = 20;
+          if (side === 0) {
+            startX = Math.random() * canvas.width;
+            startY = -pieceHeight * scaleY - margin;
+          } else if (side === 1) {
+            startX = Math.random() * canvas.width;
+            startY = canvas.height + pieceHeight * scaleY + margin;
+          } else if (side === 2) {
+            startX = -pieceWidth * scaleX - margin;
+            startY = Math.random() * canvas.height;
+          } else {
+            startX = canvas.width + pieceWidth * scaleX + margin;
+            startY = Math.random() * canvas.height;
+          }
+
+          pieces.push({
+            sx: col * pieceWidth,
+            sy: row * pieceHeight,
+            sw: pieceWidth,
+            sh: pieceHeight,
+            tx: startX,
+            ty: startY,
+            ex: targetX,
+            ey: targetY,
+            progress: 0,
+            done: false
+          });
+        }
+      }
+
+      // Thêm sự kiện click sau khi pieces đã được khởi tạo
+      startButton.addEventListener('click', () => {
+        startButton.style.display = 'none';
+        canvas.style.display = 'block';
+        status.innerText = 'Đang ghép từng mảnh...';
+        animate();
+      });
+    };
+
+    img.src = 'crush.jpg';
+  </script>
+</body>
+</html>
