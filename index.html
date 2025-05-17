@@ -122,9 +122,40 @@
     #canvas {
       display: none;
     }
+
+    .music-control {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(255, 107, 129, 0.2);
+      transition: all 0.3s ease;
+      z-index: 1000;
+      font-size: 24px;
+    }
+
+    .music-control:hover {
+      transform: scale(1.1);
+    }
+
+    .music-control.playing {
+      animation: rotate 4s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
+  <audio id="bgMusic">
+    <source src="I-Do-911.mp3" type="audio/mpeg">
+  </audio>
+  <div id="musicControl" class="music-control">🎵</div>
   <h1>🧩 Từng mảnh đang bay về phía cậu 💘</h1>
   <button id="startButton" class="start-button">Bắt đầu ghép hình 💝</button>
   <canvas id="canvas" width="380" height="600"></canvas>
@@ -216,10 +247,19 @@
       } else {
         if (!animationDone) {
           canvas.style.display = 'none';
-          const asciiWidth = 150; // Tăng độ rộng để có nhiều chi tiết hơn
+          const asciiWidth = 150;
           const asciiArt = imageToAscii(img, asciiWidth);
-          document.body.innerHTML += asciiArt;
-          document.getElementById('status').innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ T nè 💖';
+          // Thay vì thay thế toàn bộ innerHTML, chỉ thêm ASCII art vào cuối
+          const container = document.createElement('div');
+          container.innerHTML = asciiArt;
+          document.body.appendChild(container);
+          
+          // Cập nhật status text mà không làm mất các element khác
+          const statusElement = document.getElementById('status');
+          if (statusElement) {
+            statusElement.innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ T nè 💖';
+          }
+          
           animationDone = true;
         }
       }
@@ -278,6 +318,53 @@
         animate();
       });
     };
+
+    const bgMusic = document.getElementById('bgMusic');
+    const musicControl = document.getElementById('musicControl');
+    let isMusicPlaying = false;
+
+    // Hàm xử lý việc phát nhạc
+    function playMusic() {
+      const playPromise = bgMusic.play();
+      
+      if (playPromise !== undefined) {
+        playPromise.then(_ => {
+          isMusicPlaying = true;
+          musicControl.classList.add('playing');
+        })
+        .catch(error => {
+          console.log("Không thể tự động phát nhạc:", error);
+        });
+      }
+    }
+
+    // Xử lý sự kiện tương tác người dùng
+    document.addEventListener('click', function() {
+      if (!isMusicPlaying) {
+        playMusic();
+      }
+    }, { once: true });
+
+    // Xử lý nút điều khiển nhạc
+    musicControl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isMusicPlaying) {
+        bgMusic.pause();
+        musicControl.classList.remove('playing');
+      } else {
+        playMusic();
+      }
+      isMusicPlaying = !isMusicPlaying;
+    });
+
+    // Thêm phát nhạc vào sự kiện click nút start
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      canvas.style.display = 'block';
+      status.innerText = 'Đang ghép từng mảnh...';
+      playMusic();  // Phát nhạc khi bắt đầu
+      animate();
+    });
 
     img.src = 'crush.jpg';
   </script>
