@@ -13,7 +13,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      min-height: 80vh;
       margin: 0;
       padding: 20px;
       animation: backgroundGradient 10s ease infinite;
@@ -153,7 +153,7 @@
 </head>
 <body>
   <audio id="bgMusic">
-    <source src="I-Do-911.mp3" type="audio/mpeg">
+    <!-- <source src="I-Do-911.mp3" type="audio/mpeg"> -->
   </audio>
   <div id="musicControl" class="music-control">🎵</div>
   <h1>🧩 Từng mảnh đang bay về phía cậu 💘</h1>
@@ -194,7 +194,7 @@
       const imageData = tempCtx.getImageData(0, 0, width, height).data;
 
       // Sử dụng một ký tự duy nhất để tạo hình ảnh rõ ràng hơn
-      const asciiChars = "T ";  // Chỉ sử dụng "T" và khoảng trắng
+      const asciiChars = "N ";  // Chỉ sử dụng "T" và khoảng trắng
       const numChars = asciiChars.length;
       const grayScaleLevels = 256 / numChars;
       let asciiArt = "";
@@ -257,7 +257,7 @@
           // Cập nhật status text mà không làm mất các element khác
           const statusElement = document.getElementById('status');
           if (statusElement) {
-            statusElement.innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ T nè 💖';
+            statusElement.innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ N nè 💖';
           }
           
           animationDone = true;
