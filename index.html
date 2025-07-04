@@ -149,6 +149,96 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
+    .quiz-section, .result-section {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(255, 107, 129, 0.2);
+      margin: 20px auto;
+      max-width: 600px;
+      text-align: left;
+    }
+
+    .quiz-container {
+      margin: 20px 0;
+    }
+
+    .question {
+      margin-bottom: 25px;
+      padding: 20px;
+      background: rgba(255, 235, 235, 0.5);
+      border-radius: 15px;
+      border-left: 4px solid #ff6b81;
+    }
+
+    .question p {
+      color: #ff4757;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .question label {
+      display: block;
+      margin: 10px 0;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .question label:hover {
+      background: #ffe6e6;
+      border-color: #ff99aa;
+      transform: translateX(5px);
+    }
+
+    .question input[type="radio"] {
+      margin-right: 10px;
+      accent-color: #ff6b81;
+    }
+
+    .submit-button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #ff6b81, #ff4757);
+      color: white;
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(255, 107, 129, 0.3);
+      transition: all 0.3s ease;
+      margin: 20px auto;
+      display: block;
+    }
+
+    .submit-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(255, 107, 129, 0.4);
+    }
+
+    .submit-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .result-section h2 {
+      color: #ff6b81;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .result-section p {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #333;
+      text-align: center;
+      margin-bottom: 25px;
+    }
   </style>
 </head>
 <body>
@@ -156,10 +246,61 @@
     <source src="I-Do-911.mp3" type="audio/mpeg">
   </audio>
   <div id="musicControl" class="music-control">🎵</div>
-  <h1>🧩 Từng mảnh đang bay về phía cậu 💘</h1>
-  <button id="startButton" class="start-button">Bắt đầu ghép hình 💝</button>
+  <h1>🧩 Bài test độ tự tin </h1>
+  <button id="startButton" class="start-button">Bắt đầu test</button>
+  
+  <!-- Quiz Section -->
+  <div id="quizSection" class="quiz-section" style="display: none;">
+    <h2>📝 Test độ tự tin của bạn 💪</h2>
+    <div class="quiz-container">
+      <div class="question">
+        <p><strong>1. Khi gặp thử thách mới, bạn thường:</strong></p>
+        <label><input type="radio" name="q1" value="a"> A. Cảm thấy hồi hộp nhưng vẫn muốn thử</label>
+        <label><input type="radio" name="q1" value="b"> B. Tự tin rằng mình sẽ làm được</label>
+        <label><input type="radio" name="q1" value="c"> C. Lo lắng và muốn tránh né</label>
+      </div>
+      
+      <div class="question">
+        <p><strong>2. Bạn đánh giá khả năng của bản thân như thế nào?</strong></p>
+        <label><input type="radio" name="q2" value="a"> A. Khá tốt, luôn cố gắng học hỏi</label>
+        <label><input type="radio" name="q2" value="b"> B. Rất tự tin vào năng lực của mình</label>
+        <label><input type="radio" name="q2" value="c"> C. Còn nhiều thiếu sót cần cải thiện</label>
+      </div>
+      
+      <div class="question">
+        <p><strong>3. Khi người khác khen ngợi bạn:</strong></p>
+        <label><input type="radio" name="q3" value="a"> A. Cảm thấy vui và động viên</label>
+        <label><input type="radio" name="q3" value="b"> B. Thấy đó là điều đương nhiên</label>
+        <label><input type="radio" name="q3" value="c"> C. Nghĩ rằng họ chỉ nói xã giao</label>
+      </div>
+      
+      <div class="question">
+        <p><strong>4. Trước khi làm việc gì đó quan trọng:</strong></p>
+        <label><input type="radio" name="q4" value="a"> A. Chuẩn bị kỹ lưỡng và tin tưởng</label>
+        <label><input type="radio" name="q4" value="b"> B. Tự tin mình sẽ xử lý tốt</label>
+        <label><input type="radio" name="q4" value="c"> C. Lo lắng về kết quả không tốt</label>
+      </div>
+      
+      <div class="question">
+        <p><strong>5. Bạn nghĩ về tương lai của mình:</strong></p>
+        <label><input type="radio" name="q5" value="a"> A. Lạc quan và có kế hoạch rõ ràng</label>
+        <label><input type="radio" name="q5" value="b"> B. Chắc chắn sẽ thành công</label>
+        <label><input type="radio" name="q5" value="c"> C. Có nhiều lo lắng và bất an</label>
+      </div>
+    </div>
+    
+    <button id="submitQuiz" class="submit-button">Gửi kết quả 📤</button>
+  </div>
+  
+  <!-- Result Section -->
+  <div id="resultSection" class="result-section" style="display: none;">
+    <h2 id="resultTitle">🎯 Kết quả của bạn</h2>
+    <p id="resultText"></p>
+    <button id="startPuzzle" class="start-button">Bắt đầu ghép hình 💝</button>
+  </div>
+  
   <canvas id="canvas" width="380" height="600"></canvas>
-  <p id="status">Nhấn nút để bắt đầu...</p>
+  <p id="status">Nhấn nút để bắt đầu test...</p>
 
   <script>
     const canvas = document.getElementById('canvas');
@@ -167,6 +308,10 @@
     const img = new Image();
     const startButton = document.getElementById('startButton');
     const status = document.getElementById('status');
+    const quizSection = document.getElementById('quizSection');
+    const resultSection = document.getElementById('resultSection');
+    const submitQuiz = document.getElementById('submitQuiz');
+    const startPuzzle = document.getElementById('startPuzzle');
     
     let pieces = [];
     let activePieces = [];
@@ -178,6 +323,79 @@
     const ROWS = 42;
     const BATCH_SIZE = 5;  // Giảm số lượng mảnh được thêm vào mỗi lần
     const FRAME_DURATION = 60;  // Tăng thời gian cho mỗi frame
+
+    // Quiz Logic
+    function calculateConfidenceLevel() {
+      const answers = {
+        q1: document.querySelector('input[name="q1"]:checked')?.value,
+        q2: document.querySelector('input[name="q2"]:checked')?.value,
+        q3: document.querySelector('input[name="q3"]:checked')?.value,
+        q4: document.querySelector('input[name="q4"]:checked')?.value,
+        q5: document.querySelector('input[name="q5"]:checked')?.value
+      };
+
+      let score = 0;
+      Object.values(answers).forEach(answer => {
+        if (answer === 'b') score += 3; // Rất tự tin
+        else if (answer === 'a') score += 2; // Tự tin vừa phải
+        else if (answer === 'c') score += 1; // Ít tự tin
+      });
+
+      if (score >= 13) {
+        return {
+          level: "Rất tự tin! 🌟",
+          message: "Bạn là người rất tự tin và mạnh mẽ! Bạn tin tương vào khả năng của mình và không ngại đối mặt với thử thách. Hãy tiếp tục giữ vững tinh thần này nhé! 💪✨"
+        };
+      } else if (score >= 9) {
+        return {
+          level: "Tự tin cân bằng 🌈",
+          message: "Bạn có mức độ tự tin khá tốt! Bạn biết cách đánh giá bản thân một cách thực tế và luôn cố gắng học hỏi. Đây là một phẩm chất rất đáng quý! 🌟💖"
+        };
+      } else {
+        return {
+          level: "Cần thêm tự tin 🌱",
+          message: "Bạn cần tin vào bản thân nhiều hơn! Mỗi người đều có những điểm mạnh riêng. Hãy nhớ rằng bạn cũng rất đặc biệt và có thể làm được nhiều điều tuyệt vời! 🌸💝"
+        };
+      }
+    }
+
+    function showQuizResult() {
+      const result = calculateConfidenceLevel();
+      document.getElementById('resultTitle').textContent = `🎯 ${result.level}`;
+      document.getElementById('resultText').textContent = result.message;
+      
+      quizSection.style.display = 'none';
+      resultSection.style.display = 'block';
+      status.innerText = 'Xem kết quả và nhấn để xem ảnh ghép! 🎉';
+    }
+
+    // Event Listeners
+    startButton.addEventListener('click', () => {
+      startButton.style.display = 'none';
+      quizSection.style.display = 'block';
+      status.innerText = 'Hãy trả lời các câu hỏi để test độ tự tin! 📝';
+    });
+
+    submitQuiz.addEventListener('click', () => {
+      const questions = ['q1', 'q2', 'q3', 'q4', 'q5'];
+      const allAnswered = questions.every(q => document.querySelector(`input[name="${q}"]:checked`));
+      
+      if (allAnswered) {
+        // Ẩn quiz và hiển thị thông điệp đặc biệt
+        quizSection.style.display = 'none';
+        status.innerText = '💖 Không đánh giá được, em phải là chính em �';
+        
+        // Hiển thị canvas và bắt đầu ghép hình sau 2 giây
+        setTimeout(() => {
+          canvas.style.display = 'block';
+          status.innerText = 'Đang ghép từng mảnh...';
+          playMusic();
+          animate();
+        }, 2000);
+      } else {
+        alert('Vui lòng trả lời tất cả các câu hỏi! 😊');
+      }
+    });
 
     function easeOutCubic(t) {
       return 1 - Math.pow(1 - t, 3);
@@ -257,7 +475,8 @@
           // Cập nhật status text mà không làm mất các element khác
           const statusElement = document.getElementById('status');
           if (statusElement) {
-            statusElement.innerText = '🎉 Tui vẽ ảnh cậu bằng 1000 chữ N nè 💖';
+            statusElement.innerText = `  🎉 Tặng em nè
+    Anh vẽ ảnh em bằng 1000 chữ N nè 💖`;
           }
           
           animationDone = true;
@@ -311,12 +530,7 @@
       }
 
       // Thêm sự kiện click sau khi pieces đã được khởi tạo
-      startButton.addEventListener('click', () => {
-        startButton.style.display = 'none';
-        canvas.style.display = 'block';
-        status.innerText = 'Đang ghép từng mảnh...';
-        animate();
-      });
+      // Logic này đã được chuyển lên trên trong phần Quiz Logic
     };
 
     const bgMusic = document.getElementById('bgMusic');
@@ -325,48 +539,38 @@
 
     // Hàm xử lý việc phát nhạc
     function playMusic() {
-      const playPromise = bgMusic.play();
-      
-      if (playPromise !== undefined) {
-        playPromise.then(_ => {
-          isMusicPlaying = true;
-          musicControl.classList.add('playing');
-        })
-        .catch(error => {
-          console.log("Không thể tự động phát nhạc:", error);
-        });
+      if (bgMusic) {
+        const playPromise = bgMusic.play();
+        
+        if (playPromise !== undefined) {
+          playPromise.then(_ => {
+            isMusicPlaying = true;
+            musicControl.classList.add('playing');
+          })
+          .catch(error => {
+            console.log("Không thể tự động phát nhạc:", error);
+          });
+        }
       }
     }
 
-    // Xử lý sự kiện tương tác người dùng
-    document.addEventListener('click', function() {
-      if (!isMusicPlaying) {
-        playMusic();
-      }
-    }, { once: true });
+    // Bỏ sự kiện tự động phát nhạc khi click bất kỳ đâu
 
     // Xử lý nút điều khiển nhạc
     musicControl.addEventListener('click', (e) => {
       e.stopPropagation();
-      if (isMusicPlaying) {
-        bgMusic.pause();
-        musicControl.classList.remove('playing');
-      } else {
-        playMusic();
+      if (bgMusic) {
+        if (isMusicPlaying) {
+          bgMusic.pause();
+          musicControl.classList.remove('playing');
+        } else {
+          playMusic();
+        }
+        isMusicPlaying = !isMusicPlaying;
       }
-      isMusicPlaying = !isMusicPlaying;
     });
 
-    // Thêm phát nhạc vào sự kiện click nút start
-    startButton.addEventListener('click', () => {
-      startButton.style.display = 'none';
-      canvas.style.display = 'block';
-      status.innerText = 'Đang ghép từng mảnh...';
-      playMusic();  // Phát nhạc khi bắt đầu
-      animate();
-    });
-
-    img.src = 'image.png';
+    img.src = 'na.png';
   </script>
 </body>
 </html>
